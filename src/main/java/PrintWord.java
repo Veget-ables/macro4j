@@ -22,7 +22,8 @@ class PrintWord {
         XWPFDocument document = new XWPFDocument();
         XWPFParagraph paragraph = document.createParagraph();
         XWPFRun run = paragraph.createRun();
-        run.setText("サンプル");
+
+        run.setText(book.getSheetAt(0).getRow(0).getCell(1).getStringCellValue());
         return document;
     }
 }

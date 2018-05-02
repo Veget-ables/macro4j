@@ -19,7 +19,8 @@ public class SortMacro {
                 Workbook book = randomSortXSLX(INPUT_DIR + fileName + ".xlsx");
                 FileOutputStream fileOut = new FileOutputStream(OUTPUT_DIR + fileName + i + ".xlsx");
                 book.write(fileOut);
-//                PrintWord.createWord(OUTPUT_DIR + "test.docx", book);
+
+                PrintWord.createWord(OUTPUT_DIR + fileName + i + ".docx", book);
             } catch (IOException | InvalidFormatException e) {
                 throw new RuntimeException(e);
             }
@@ -33,9 +34,8 @@ public class SortMacro {
         int startNextRow = 0;
         int currentRow = 0;
         while (true) {
-            currentRow = sortSet(startNextRow, currentRow);
-            if (mSheet.getRow(currentRow + 2) == null) break; // 空行が2行続く場合，データがないとみなし終了．
-            currentRow++;
+            currentRow = sortSet(startNextRow, currentRow + 1);
+            if (currentRow == -1) break; // 空行の場合，データがないとみなし終了．
             startNextRow = currentRow;
         }
         return book;
@@ -45,8 +45,20 @@ public class SortMacro {
     private static int sortSet(int startRow, int currentRow) {
         while (true) {
             Row row = mSheet.getRow(currentRow);
-            if (row == null) break; // 空行
-            currentRow++;
+            if (row == null) { // 最後の空行がきた．
+                randomSort(startRow, currentRow);
+                return -1;
+            }
+            Cell cell = row.getCell(0);
+            if (cell == null) {
+                currentRow++;
+            } else {
+                if (cell.getNumericCellValue() == 0) { // 意図しない空文字列が含まれている場合がある．
+                    currentRow++;
+                    continue;
+                }
+                break;
+            }
         }
         randomSort(startRow, currentRow);
         return currentRow;
@@ -73,16 +85,15 @@ public class SortMacro {
     }
 
     // ソート後の値を古い列に上書きする．
-    private static void removeOldCells(int startRow, int setMax){
+    private static void removeOldCells(int startRow, int setMax) {
         for (int i = startRow; i < setMax; i++) {
             Row row = mSheet.getRow(i);
             Cell kanaCell = row.getCell(RANDOM_CELL);
             Cell kanjiCell = row.getCell(RANDOM_CELL + 1);
             row.getCell(1).setCellValue(kanaCell.getStringCellValue());
             row.getCell(2).setCellValue(kanjiCell.getStringCellValue());
-
-//            kanaCell.removeCellComment();
-//            kanjiCell.removeCellComment();
+            kanaCell.removeCellComment();
+            kanjiCell.removeCellComment();
         }
     }
 }
