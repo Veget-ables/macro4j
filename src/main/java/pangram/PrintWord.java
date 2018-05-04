@@ -11,41 +11,36 @@ import java.io.IOException;
 import java.math.BigInteger;
 
 class PrintWord {
+    private static XWPFDocument mDocument;
 
-    static void createWord(String absPath, Workbook book) {
+    static void createPangramList(String absPath, Workbook book) {
         try (FileOutputStream out = new FileOutputStream(new File(absPath))) {
-            XWPFDocument document = addPangramList(book);
-            document.write(out);
+            mDocument = new XWPFDocument();
+            addPangrams(book);
+            mDocument.write(out);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static XWPFDocument addPangramList(Workbook book) {
+    private static XWPFDocument addPangrams(Workbook book) {
         Sheet sheet = book.getSheetAt(0);
-        XWPFDocument document = new XWPFDocument();
         int wordId = 1;
         int rowNum = 0;
         int day = 1;
-        insertDayTitle(document, day);
 
         while (true) {
-            XWPFRun run = document.createParagraph().createRun();
             Row row = sheet.getRow(rowNum);
-            if (row == null) return document;
+            if (row == null) return mDocument;
 
-            String kana = row.getCell(1).getStringCellValue();
-            String kanji = row.getCell(2).getStringCellValue();
-
-            String format = wordId < 10 ? "%s.    %s (%s) \n" : "%s.  %s (%s) \n";
-            String text = String.format(format, wordId, kana, kanji);
-            run.setText(text);
-
+            if (wordId == 1) {
+                mDocument.createParagraph().setPageBreak(true);
+                insertDayTitle(day++);
+            }
+            insertText(row, wordId);
             if (wordId == 18) {
-                document.createParagraph().createRun().addBreak();
-                insertTable(document);
-                document.createParagraph().setPageBreak(true);
-                insertDayTitle(document, ++day);
+                mDocument.createParagraph().createRun().addBreak();
+                insertTable();
                 wordId = 1;
             } else {
                 wordId++;
@@ -54,16 +49,27 @@ class PrintWord {
         }
     }
 
-    private static void insertDayTitle(XWPFDocument document, int day) {
-        XWPFParagraph paragraph = document.createParagraph();
+    private static void insertDayTitle(int day) {
+        XWPFParagraph paragraph = mDocument.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         XWPFRun runTitle = paragraph.createRun();
         runTitle.setFontSize(24);
         runTitle.setText("計測" + day + "日目");
     }
 
-    private static void insertTable(XWPFDocument document){
-        XWPFTable table = document.createTable(2, 1);
+    private static void insertText(Row row, int wordId) {
+        XWPFParagraph paragraph = mDocument.createParagraph();
+        paragraph.setSpacingBeforeLines(35);
+        XWPFRun run = paragraph.createRun();
+
+        String format = wordId < 10 ? "%s.    %s (%s) \n" : "%s.  %s (%s) \n";
+        String kana = row.getCell(1).getStringCellValue();
+        String kanji = row.getCell(2).getStringCellValue();
+        run.setText(String.format(format, wordId, kana, kanji));
+    }
+
+    private static void insertTable() {
+        XWPFTable table = mDocument.createTable(2, 1);
         XWPFTableCell timeCell = table.getRow(0).getCell(0);
         setCellWidth(timeCell);
         XWPFParagraph timeParagraph = timeCell.getParagraphs().get(0);
@@ -71,12 +77,12 @@ class PrintWord {
         run.setText("開始時刻:");
 
         XWPFTableRow row = table.getRow(1);
-        row.setHeight(2000);
+        row.setHeight(3000);
         XWPFTableCell commentCell = row.getCell(0);
         setCellWidth(commentCell);
     }
 
-    private static void setCellWidth(XWPFTableCell cell){
+    private static void setCellWidth(XWPFTableCell cell) {
         cell.getCTTc().addNewTcPr().addNewTcW().setW(BigInteger.valueOf(10500L));
     }
 }
