@@ -1,4 +1,4 @@
-package pangram;
+package pangram.random;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -38,6 +38,7 @@ class PrintWord {
                 insertDayTitle(day++);
             }
             insertText(row, wordId);
+
             if (wordId == 18) {
                 mDocument.createParagraph().createRun().addBreak();
                 insertTable();
