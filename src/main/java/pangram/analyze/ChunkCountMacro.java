@@ -13,7 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-public class Phrase {
+public class ChunkCountMacro {
     private static String REQUEST_URL;
     private static String FILE_PATH;
 
@@ -36,10 +36,10 @@ public class Phrase {
             String encodedText = URLEncoder.encode(kanji, "UTF-8");
             HttpURLConnection conn = (HttpURLConnection) new URL(REQUEST_URL + encodedText).openConnection();
             InputStream in = conn.getInputStream();
-            ChunkSax.build(in);
+            ChunkCounter.build(in);
 
             rowNum++;
         }
-        System.out.println("Chunk:" + ChunkSax.getCountChunk());
+        System.out.println("Chunk:" + ChunkCounter.getCountChunk());
     }
 }

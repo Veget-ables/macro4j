@@ -10,7 +10,7 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class ChunkSax extends DefaultHandler {
+public class ChunkCounter extends DefaultHandler {
     private static int countChunk = 0;
 
     static int getCountChunk(){
@@ -21,7 +21,7 @@ public class ChunkSax extends DefaultHandler {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
             SAXParser parser = factory.newSAXParser();
-            parser.parse(in, new ChunkSax());
+            parser.parse(in, new ChunkCounter());
         }catch (SAXException | ParserConfigurationException e){
             throw new RuntimeException(e);
         }
