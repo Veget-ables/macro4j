@@ -8,22 +8,27 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class RandomSortMacro {
-    private static final String BASE_FILE_NAME = "pangram";
-    private static final String INPUT_FILE = "/Users/Tojo/Desktop/files/" + BASE_FILE_NAME;
-    private static final String OUTPUT_FILE = "/Users/Tojo/Desktop/files/" + BASE_FILE_NAME ;
+    private static final String INPUT_FILE_PATH;
     private static final int RANDOM_KANA_CELL = 100;
     private static final int RANDOM_KANJI_CELL = 101;
 
     private static Sheet mSheet;
+    private static boolean isFinish = false;
+
+    static {
+        INPUT_FILE_PATH = System.getenv("INPUT_FILE_PATH");
+    }
 
     public static void main(String[] args) {
-        for (int i = 1; i < 13; i++) { // 12セット分のランダムファイルを作成
+        final String outputFile = "/Users/Tojo/Desktop/files/pangram";
+
+        for (int i = 13; i < 37; i++) { // 12セット分のランダムファイルを作成
             try {
-                Workbook book = randomSortXSLX(INPUT_FILE + ".xlsx");
-                FileOutputStream fileOut = new FileOutputStream(OUTPUT_FILE + i + ".xlsx");
+                Workbook book = randomSortXSLX(INPUT_FILE_PATH);
+                FileOutputStream fileOut = new FileOutputStream(outputFile + i + ".xlsx");
                 book.write(fileOut);
 
-                PrintWord.createPangramList(OUTPUT_FILE + i + ".docx", book);
+                PrintWord.createPangramList(outputFile + i + ".docx", book);
             } catch (IOException | InvalidFormatException e) {
                 throw new RuntimeException(e);
             }
@@ -32,18 +37,20 @@ public class RandomSortMacro {
 
     /**
      * 1セットごとにソートする．
+     *
      * @param fileName ソート対象のファイル名．
      */
     static private Workbook randomSortXSLX(String fileName) throws IOException, InvalidFormatException {
         Workbook book = WorkbookFactory.create(new File(fileName));
         mSheet = book.getSheetAt(0);
+        isFinish = false;
 
         int startNextRow = 0;
         int currentRow = 0;
         while (true) {
             currentRow = countSetSentence(currentRow + 1);
             randomSortRange(startNextRow, currentRow);
-            if (currentRow == -1) break; // 空行の場合，データがないとみなし終了．
+            if (isFinish) break; // 空行の場合，データがないとみなし終了．
             startNextRow = currentRow;
         }
         return book;
@@ -51,12 +58,13 @@ public class RandomSortMacro {
 
     /**
      * セットに含まれる短文数をカウント．セットの区切りは0番目のCellの番号で判断．
-      */
+     */
     private static int countSetSentence(int currentRow) {
         while (true) {
             Row row = mSheet.getRow(currentRow);
             if (row == null) { // 最後の空行がきた．
-                return -1;
+                isFinish = true;
+                return currentRow;
             }
             Cell cell = row.getCell(0); // 1番目のcellの値で日数を区別．
             if (cell != null) {
@@ -93,7 +101,7 @@ public class RandomSortMacro {
 
     /**
      * ソート後の値を古い列に上書きする．
-      */
+     */
     private static void removeOldCells(int startRow, int setMax) {
         for (int i = startRow; i < setMax; i++) {
             Row row = mSheet.getRow(i);
