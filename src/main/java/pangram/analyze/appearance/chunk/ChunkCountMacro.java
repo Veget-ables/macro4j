@@ -1,4 +1,4 @@
-package pangram.analyze;
+package pangram.analyze.appearance.chunk;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;

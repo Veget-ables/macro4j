@@ -1,4 +1,4 @@
-package pangram.random;
+package pangram.print;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
