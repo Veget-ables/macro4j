@@ -27,7 +27,7 @@ class KanaCounter {
                     int count = countMap.get(k) + 1;
                     countMap.put(k, count);
                 } else {
-                    countMap.put(k, 0);
+                    countMap.put(k, 1);
                 }
             }
             rowNum++;
@@ -39,27 +39,22 @@ class KanaCounter {
         Map<String, Integer> countKanaMap = new LinkedHashMap<>();
         for (KanaType kanaType : KanaType.values()) {
             for (int i = 0; i < kanaType.getKana().length; i++) {
-                String key;
+                String key = "";
                 int count = 0;
-
                 String kana = kanaType.getKana()[i];
+                key = kana;
                 if (kana.isEmpty()) continue;
                 if (map.containsKey(kana)) count = map.get(kana);
-                key = kana;
+
 
                 if (kanaType.getSecondKana() != null) {
                     String secondKana = kanaType.getSecondKana()[i];
-                    if (map.containsKey(secondKana)) {
-                        count += map.get(secondKana);
-                        key += ", " + secondKana;
-                    }
+                    if (map.containsKey(secondKana)) count += map.get(secondKana);
                 }
                 if (kanaType.getThirdKana() != null) {
                     String thirdKana = kanaType.getThirdKana()[i];
-                    if (map.containsKey(thirdKana)) {
-                        count += map.get(thirdKana);
-                        key += ", " + thirdKana;
-                    }
+                    if (map.containsKey(thirdKana)) count += map.get(thirdKana);
+
                 }
                 countKanaMap.put(key, count);
             }

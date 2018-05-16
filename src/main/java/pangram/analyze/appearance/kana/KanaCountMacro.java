@@ -30,20 +30,24 @@ public class KanaCountMacro {
         kanaMap.forEach((k, v) -> System.out.println(k + " :" + v));
 
         // 出現割合を算出するために，合計文字数を計算
-        int countAll =0;
-        for(String key : kanaMap.keySet()){
-            if(key.equals("、") || key.equals("。"))continue;
+        int countAll = 0;
+        for (String key : kanaMap.keySet()) {
+            if (key.equals("、") || key.equals("。")) continue;
             countAll += kanaMap.get(key);
         }
 
-        int rowNum=1;
-        for(String key : kanaMap.keySet()){
-            Row row = sheet.getRow(rowNum++);
+        int rowNum = 1;
+        for (String key : kanaMap.keySet()) {
+            Row row = sheet.getRow(rowNum);
+            if (row == null) {
+                row = sheet.createRow(rowNum);
+            }
+            rowNum++;
             row.createCell(KANA_CELL).setCellValue(key);
 
             int count = kanaMap.get(key);
             row.createCell(KANA_COUNT_CELL).setCellValue(count);
-            row.createCell(KANA_APPEARANCE_RATE_CELL).setCellValue((double) count/countAll);
+            row.createCell(KANA_APPEARANCE_RATE_CELL).setCellValue((double) count / countAll);
         }
 
         FileOutputStream fileOut = new FileOutputStream(OUTPUT_FILE_PATH);

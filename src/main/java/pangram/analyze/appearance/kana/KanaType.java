@@ -15,7 +15,7 @@ enum KanaType {
             new String[]{"ざ", "じ", "ず", "ぜ", "ぞ"}),
 
     KANA_T(
-            new String[]{"た", "ち", "つ", "で", "と"},
+            new String[]{"た", "ち", "つ", "て", "と"},
             new String[]{"だ", "ぢ", "っ", "で", "ど"},
             new String[]{"", "", "づ", "", ""}),
 
