@@ -2,9 +2,9 @@ package pangram.print;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
+import pangram.OutputUtil;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class RandomSortMacro {
@@ -25,8 +25,7 @@ public class RandomSortMacro {
         for (int i = 13; i < 37; i++) { // 12セット分のランダムファイルを作成
             try {
                 Workbook book = randomSortXSLX(INPUT_FILE_PATH);
-                FileOutputStream fileOut = new FileOutputStream(outputFile + i + ".xlsx");
-                book.write(fileOut);
+                OutputUtil.book(outputFile + i + ".xlsx", book);
 
                 PrintWord.createPangramList(outputFile + i + ".docx", book);
             } catch (IOException | InvalidFormatException e) {

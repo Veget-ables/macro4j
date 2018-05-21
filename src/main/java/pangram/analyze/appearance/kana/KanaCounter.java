@@ -46,7 +46,6 @@ class KanaCounter {
                 if (kana.isEmpty()) continue;
                 if (map.containsKey(kana)) count = map.get(kana);
 
-
                 if (kanaType.getSecondKana() != null) {
                     String secondKana = kanaType.getSecondKana()[i];
                     if (map.containsKey(secondKana)) count += map.get(secondKana);

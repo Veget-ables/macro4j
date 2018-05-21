@@ -5,9 +5,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import pangram.OutputUtil;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
 
@@ -50,7 +50,6 @@ public class KanaCountMacro {
             row.createCell(KANA_APPEARANCE_RATE_CELL).setCellValue((double) count / countAll);
         }
 
-        FileOutputStream fileOut = new FileOutputStream(OUTPUT_FILE_PATH);
-        book.write(fileOut);
+        OutputUtil.book(OUTPUT_FILE_PATH, book);
     }
 }
