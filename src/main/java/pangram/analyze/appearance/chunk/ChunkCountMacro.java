@@ -18,7 +18,7 @@ public class ChunkCountMacro {
     private static String FILE_PATH;
 
     static {
-        FILE_PATH = System.getenv("TARGET_FILE_PATH"); // 読み込むファイルを設定する
+        FILE_PATH = System.getenv("INPUT_FILE_PATH"); // 読み込むファイルを設定する
         String APP_ID = System.getenv("YAHOO_APP_ID"); // 登録したAPP_IDを設定する
         REQUEST_URL = "https://jlp.yahooapis.jp/DAService/V1/parse?appid=" + APP_ID + "&sentence=";
     }
@@ -31,13 +31,12 @@ public class ChunkCountMacro {
         while (true) {
             Row row = sheet.getRow(rowNum);
             if (row == null) break;
-
+            if(row.getCell(2) == null) break;
             String kanji = row.getCell(2).getStringCellValue();
             String encodedText = URLEncoder.encode(kanji, "UTF-8");
             HttpURLConnection conn = (HttpURLConnection) new URL(REQUEST_URL + encodedText).openConnection();
             InputStream in = conn.getInputStream();
             ChunkCounter.build(in);
-
             rowNum++;
         }
         System.out.println("Chunk:" + ChunkCounter.getCountChunk());
