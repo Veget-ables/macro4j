@@ -4,7 +4,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 class MeasureLength {
-    private static final String SPLIT_REGEX = " |\\n|\\?|!|？|！|。、*|w+";
+    private static final String SPLIT_REGEX = " |\\n|\\?|!|？|！|。、*|w+|わらい、*|（わらい）、*";
 
     private static final int LENGTH_CELL = 20;
     private static final int LENGTH_AVERAGE_CELL = 21;
