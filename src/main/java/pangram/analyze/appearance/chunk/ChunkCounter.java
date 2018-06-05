@@ -17,7 +17,7 @@ public class ChunkCounter extends DefaultHandler {
         return countChunk;
     }
 
-    static void build(InputStream in) throws IOException {
+    static void execute(InputStream in) throws IOException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
             SAXParser parser = factory.newSAXParser();
