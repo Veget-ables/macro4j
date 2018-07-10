@@ -18,10 +18,10 @@ public class MatchDefaultSentenceMacro {
     }
 
     public static void main(String[] args) throws IOException, InvalidFormatException {
-        Workbook pangramBook = WorkbookFactory.create(new File(INPUT_DIR_PATH + "pangram1.xlsx"));
-        Workbook inputDataBook = WorkbookFactory.create(new File(INPUT_DIR_PATH  + "SentenceData1.xlsm"));
+        Workbook pangramBook = WorkbookFactory.create(new File(INPUT_DIR_PATH + "pangram12.xlsx"));
+        Workbook inputDataBook = WorkbookFactory.create(new File(INPUT_DIR_PATH  + "SentenceData12.xlsm"));
 
         SentenceMatcher.execute(pangramBook.getSheetAt(0), inputDataBook.getSheetAt(0));
-        OutputUtil.book(OUTPUT_DIR_PATH + "SentenceData1_out.xlsm", inputDataBook);
+        OutputUtil.book(OUTPUT_DIR_PATH + "SentenceData12_out.xlsm", inputDataBook);
     }
 }
